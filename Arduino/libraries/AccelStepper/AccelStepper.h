@@ -434,6 +434,10 @@ public:
     /// \param[in] enableInvert    True for inverted enable pin, false (default) for non-inverted
     void    setPinsInverted(bool pin1Invert, bool pin2Invert, bool pin3Invert, bool pin4Invert, bool enableInvert);
 
+    /// The time the stepper was last active.
+    /// \return The time the stepper was last active. Comparable with system API call \a millis().
+    unsigned long lastActivityMillis();
+
 protected:
 
     /// \brief Direction indicator
@@ -590,6 +594,8 @@ private:
     /// Current direction motor is spinning in
     boolean _direction; // 1 == CW
 
+    /// Last time the stepper was active
+    unsigned long _lastActivityMillis;
 };
 
 /// @example Random.pde

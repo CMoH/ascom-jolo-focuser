@@ -64,6 +64,7 @@ boolean AccelStepper::runSpeed()
 	step(_currentPos);
 
 	_lastStepTime = time;
+        _lastActivityMillis = millis();
 	return true;
     }
     else
@@ -202,6 +203,7 @@ AccelStepper::AccelStepper(uint8_t interface, uint8_t pin1, uint8_t pin2, uint8_
     _minPulseWidth = 1;
     _enablePin = 0xff;
     _lastStepTime = 0;
+    _lastActivityMillis = millis();
     _pin[0] = pin1;
     _pin[1] = pin2;
     _pin[2] = pin3;
@@ -234,6 +236,7 @@ AccelStepper::AccelStepper(void (*forward)(), void (*backward)())
     _minPulseWidth = 1;
     _enablePin = 0xff;
     _lastStepTime = 0;
+    _lastActivityMillis = millis();
     _pin[0] = 0;
     _pin[1] = 0;
     _pin[2] = 0;
@@ -621,4 +624,9 @@ void AccelStepper::stop()
 	else
 	    move(-stepsToStop);
     }
+}
+
+unsigned long AccelStepper::lastActivityMillis()
+{
+    return _lastActivityMillis;
 }
