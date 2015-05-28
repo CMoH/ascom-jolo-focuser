@@ -6,19 +6,10 @@ long readFocuserPos() {
   return readLong(getReadFocuserPosAddress() + 1);
 }
 
-void writeByte(word address, byte value) {
-  if(readByte(address) != value) EEPROM.write(address, value);
-}
-
-word readByte(word address) {
-  return EEPROM.read(address);   
-}
 
 void writeWord(word address, word value) {
-  if(readWord(address) != value) {
-    EEPROM.write(address, lowByte(value)); 
-    EEPROM.write(address + 1, highByte(value)); 
-  }
+  EEPROM.write(address, lowByte(value)); 
+  EEPROM.write(address + 1, highByte(value)); 
 }
 
 word readWord(word address) {
@@ -38,6 +29,7 @@ void writeLong(word address, long value) {
   writeWord(address + 2, highWord);
 }
 
+
 int stringToNumber(String thisString) {
   int i, value = 0, length;
   length = thisString.length();
@@ -55,24 +47,6 @@ long stringToLong(String thisString) {
     value = (10*value) + thisString.charAt(i)-(int) '0';
   }
   return value;
-}
-
-String formatFloat(float value, byte length, byte precision) {
-  char tmp [length+1];
-  dtostrf(value, length, precision, tmp);  
-  return String(tmp);
-}
-
-String formatLong(long value, byte length) {
-  char tmp [length+1];
-  dtostrf(value, length, 0, tmp);  
-  return String(tmp);
-}
-
-int readAnalogAvg(byte pin, byte count) {
-  long sum = 0;
-  for(byte i = 0; i < count; i++) sum += analogRead(pin);
-  return (sum / count); 
 }
 
 
@@ -98,4 +72,17 @@ int getReadFocuserPosAddress() {
   }
 }
 
+// Temperature read
+void requestTemp() {
+  if(sensorConnected) {
+    sensors.requestTemperaturesByAddress(insideThermometer); // Send the command to get temperature. For 10 bit res it takes 188ms
+    tempReadMilis = millis() + 188;
+    tempRequestMilis = 0;
+  }
+}
 
+void readTemp() {
+  currentTemp = sensors.getTempC(insideThermometer);
+  tempRequestMilis = millis() + TEMP_CYCLE;
+  tempReadMilis = 0;
+}
