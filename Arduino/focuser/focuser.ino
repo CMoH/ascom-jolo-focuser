@@ -66,7 +66,6 @@ String inputString;                  // Serial input command string (terminated 
 
 boolean newCommand = false;          // set to true before issuing a new command
 boolean stepperEnabled = false;      // see lastCommandMillis
-unsigned long lastCommandMillis = 0; // millis since last stepper command
 #define DISABLE_TIMEOUT 10000         // millis of inactivity before powerdown 10 sec
 
 byte buzzes = 0;                     // Number of buzzes to do 
@@ -82,7 +81,6 @@ void loop()
   //enable if needed
 #ifdef DISABLE_TIMEOUT
   if (newCommand) {
-    lastCommandMillis = millis();
     if (!stepperEnabled) stepper.enableOutputs();
     stepperEnabled = true;
     newCommand = false;
@@ -112,7 +110,7 @@ void loop()
 
   // Power down after inactivity
 #ifdef DISABLE_TIMEOUT
-  if (stepperEnabled && millis() > lastCommandMillis + DISABLE_TIMEOUT) {
+  if (stepperEnabled && millis() > stepper.lastActivityMillis() + DISABLE_TIMEOUT) {
     stepper.disableOutputs();
     stepperEnabled = false;
   }
