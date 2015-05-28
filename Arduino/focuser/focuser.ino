@@ -65,8 +65,8 @@ float currentTemp;                   // Current cached temperature
 String inputString;                  // Serial input command string (terminated with \n)
 
 boolean newCommand = false;          // set to true before issuing a new command
-boolean stepperEnabled = false;      // see lastCommandMillis
-#define DISABLE_TIMEOUT 10000         // millis of inactivity before powerdown 10 sec
+boolean stepperEnabled = false;      // status of the stepper (output enabled or disabled)
+#define DISABLE_TIMEOUT 10000        // millis of inactivity before powerdown 10 sec
 
 byte buzzes = 0;                     // Number of buzzes to do 
 int buzz_time = 0;                   // Next buzz period 
